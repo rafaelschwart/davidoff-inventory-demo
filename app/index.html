@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Davidoff Hard Rock · Inventory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header id="topbar">
+    <div class="brand">
+      <a class="brand-logo" href="#/dashboard" aria-label="Davidoff of Geneva">
+        <img src="assets/davidoff-wordmark.svg" alt="Davidoff of Geneva, since 1911" width="184" height="30">
+      </a>
+      <span class="brand-rule"></span>
+      <span class="brand-title">Hollywood, FL · Inventory</span>
+      <span class="brand-promise">the master list that updates itself</span>
+    </div>
+    <div id="topbar-controls">
+      <!-- rendered by app.js -->
+    </div>
+  </header>
+
+  <aside id="sidebar">
+    <nav id="nav"><!-- rendered by app.js --></nav>
+    <div class="side-stamp">
+      <span class="credit-arq">Built by Arqentia</span>
+      <span class="credit-sub">operations engineering</span>
+    </div>
+  </aside>
+
+  <main id="view">
+    <section class="panel boot-panel">
+      <div class="kicker">Loading</div>
+      <p class="muted">Starting the demo…</p>
+    </section>
+  </main>
+
+  <footer id="footer">
+    <span>Davidoff of Geneva · Hard Rock Hollywood</span>
+    <span class="foot-rule"></span>
+    <span>Built by Arqentia</span>
+  </footer>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <div id="camera-overlay" hidden>
+    <div class="cam-frame">
+      <video id="camera-video" playsinline muted></video>
+      <div class="cam-reticle"></div>
+    </div>
+    <div class="cam-hint">Point the camera at a barcode</div>
+    <button class="btn" type="button" data-action="camera-close">Cancel</button>
+  </div>
+
+  <script src="vendor/anime.min.js"></script>
+  <script src="store.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
