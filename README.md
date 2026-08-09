@@ -21,9 +21,9 @@ Opening `app/index.html` directly works too, except the camera scanner
 (browsers require localhost or https for camera access). A real USB barcode
 scanner in HID mode works anywhere: it types into the focused scan field.
 
-## The 28 second overview
+## The 42 second overview
 
-`video/davidoff-inventory-demo-28s.mp4` is a silent capability reel of the
+`video/davidoff-inventory-demo-42s.mp4` is a silent capability reel of the
 running app. `docs/Demo-Overview.pdf` is a four page brochure explaining the
 dashboard and what it changes about the operation.
 
