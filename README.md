@@ -62,7 +62,9 @@ Vanilla JavaScript, no framework and no build step.
 - `app/store.js` is the whole data layer: catalog, movement ledger, locations
   and entities, cost history, offline queue, CSV export. State persists to
   `localStorage`, so a reload keeps your work and "Reset demo" restores the
-  seed.
+  seed. The seed carries about 150 products and a morning's worth of movements,
+  and it re-anchors its own timestamps on load, so the demo still opens on a
+  live-looking day weeks later rather than on a dashboard full of zeroes.
 - `app/app.js` is the UI: one central render driven by store subscriptions,
   hash routing, event delegation.
 - `app/vendor/anime.min.js` drives the interaction animations (count ups,

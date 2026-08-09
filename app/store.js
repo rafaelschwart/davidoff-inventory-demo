@@ -245,6 +245,127 @@
       product('852113005028', '852113005028', false, 'Spanish Cedar Sheets (10 pack)', 'Humidification', 'Quality Importers', 'unit', 'unit', 1, 9.50)
     ];
 
+    /* ---- catalog depth ------------------------------------------------------
+       The 24 products above carry the demo script. A real master list for four
+       cigar nodes runs to hundreds of SKUs, because every line exists in every
+       vitola, and with only two dozen rows the search box, the category and
+       supplier filters and the column sorting have nothing to bite on. These
+       fill the catalog out to that scale.
+
+       Deterministic on purpose: a demo that shows different products each time
+       it is opened invites the question of whether any of it is real. */
+    var genSeed = 20260808;
+    function rnd() {
+      genSeed = (genSeed * 1103515245 + 12345) & 0x7fffffff;
+      return genSeed / 0x7fffffff;
+    }
+    function between(lo, hi) { return lo + rnd() * (hi - lo); }
+
+    var LINES = [
+      { name: 'Davidoff Grand Cru', cat: 'Cigars', sup: DAV, base: 17.5, pre: '76235001' },
+      { name: 'Davidoff Aniversario', cat: 'Cigars', sup: DAV, base: 26.0, pre: '76235001' },
+      { name: 'Davidoff Millennium', cat: 'Cigars', sup: DAV, base: 24.0, pre: '76235001' },
+      { name: 'Davidoff Nicaragua', cat: 'Cigars', sup: DAV, base: 19.5, pre: '76235001' },
+      { name: 'Davidoff Escurio', cat: 'Cigars', sup: DAV, base: 18.0, pre: '76235001' },
+      { name: 'Davidoff Yamasa', cat: 'Cigars', sup: DAV, base: 20.5, pre: '76235001' },
+      { name: 'Davidoff Colorado Claro', cat: 'Cigars', sup: DAV, base: 22.0, pre: '76235001' },
+      { name: 'Davidoff Winston Churchill The Late Hour', cat: 'Cigars', sup: DAV, base: 23.0, pre: '76235002' },
+      { name: 'Davidoff Winston Churchill The Aristocrat', cat: 'Cigars', sup: DAV, base: 25.5, pre: '76235002' },
+      { name: 'Avo Classic', cat: 'Cigars', sup: DAV, base: 11.0, pre: '84041210' },
+      { name: 'Avo XO', cat: 'Cigars', sup: DAV, base: 13.5, pre: '84041210' },
+      { name: 'Avo Syncro Nicaragua', cat: 'Cigars', sup: DAV, base: 12.5, pre: '84041210' },
+      { name: 'Avo Domaine', cat: 'Cigars', sup: DAV, base: 10.5, pre: '84041210' },
+      { name: 'Camacho Corojo', cat: 'Cigars', sup: 'Davidoff of Geneva USA', base: 9.5, pre: '74436422' },
+      { name: 'Camacho Connecticut', cat: 'Cigars', sup: 'Davidoff of Geneva USA', base: 9.0, pre: '74436422' },
+      { name: 'Camacho Ecuador', cat: 'Cigars', sup: 'Davidoff of Geneva USA', base: 10.0, pre: '74436422' },
+      { name: 'Camacho American Barrel-Aged', cat: 'Cigars', sup: 'Davidoff of Geneva USA', base: 12.0, pre: '74436422' },
+      { name: 'Zino Platinum Crown', cat: 'Cigars', sup: DAV, base: 14.0, pre: '76235002' },
+      { name: 'Zino Nicaragua', cat: 'Cigars', sup: DAV, base: 11.5, pre: '76235002' },
+      { name: 'The Griffins Classic', cat: 'Cigars', sup: DAV, base: 12.0, pre: '76235002' },
+      { name: 'Private Stock', cat: 'Cigars', sup: DAV, base: 7.5, pre: '76235002' }
+    ];
+    var VITOLAS = [
+      { v: 'Robusto', m: 1.00, per: 25 },
+      { v: 'Toro', m: 1.12, per: 25 },
+      { v: 'Churchill', m: 1.26, per: 20 },
+      { v: 'Corona', m: 0.88, per: 25 },
+      { v: 'Petit Corona', m: 0.74, per: 25 },
+      { v: 'Piramide', m: 1.20, per: 20 },
+      { v: 'Belicoso', m: 1.16, per: 20 },
+      { v: 'Double Corona', m: 1.34, per: 20 },
+      { v: 'Short Robusto', m: 0.86, per: 25 },
+      { v: 'Gordo', m: 1.30, per: 20 }
+    ];
+    var ACCESSORIES = [
+      ['Xikar Xi1 Cutter', 'Accessories', 'Quality Importers', 62.0],
+      ['Xikar Xi3 Cutter', 'Accessories', 'Quality Importers', 88.0],
+      ['Colibri V-Cut Cutter', 'Accessories', 'Quality Importers', 54.0],
+      ['Davidoff Double Blade Cutter', 'Accessories', DAV, 145.0],
+      ['S.T. Dupont Maxijet Lighter', 'Accessories', 'Quality Importers', 185.0],
+      ['Xikar Allume Single Lighter', 'Accessories', 'Quality Importers', 42.0],
+      ['Colibri Firebird Torch', 'Accessories', 'Quality Importers', 28.0],
+      ['Davidoff Prestige Lighter', 'Accessories', DAV, 320.0],
+      ['Crystal Ashtray 2 Cigar', 'Accessories', 'Quality Importers', 48.0],
+      ['Davidoff Travel Humidor 3 Cigar', 'Accessories', DAV, 240.0],
+      ['Leather Cigar Case 5 Count', 'Accessories', 'Quality Importers', 96.0],
+      ['Cedar Travel Case 10 Count', 'Accessories', 'Quality Importers', 64.0],
+      ['Boveda 72% Humidification Pack 60g', 'Humidification', 'Boveda Inc.', 5.75],
+      ['Boveda 65% Humidification Pack 60g', 'Humidification', 'Boveda Inc.', 5.75],
+      ['Boveda 69% Humidification Pack 320g', 'Humidification', 'Boveda Inc.', 14.50],
+      ['Boveda Butler Holder', 'Humidification', 'Boveda Inc.', 22.00],
+      ['Digital Hygrometer Round', 'Humidification', 'Quality Importers', 34.00],
+      ['Spanish Cedar Trays', 'Humidification', 'Quality Importers', 41.00],
+      ['Propylene Glycol Solution 8oz', 'Humidification', 'Quality Importers', 12.50],
+      ['Humidor Seasoning Kit', 'Humidification', 'Quality Importers', 26.00]
+    ];
+
+    var genStock = { corp: {}, shop1: {}, shop2: {}, davidoff: {} };
+    var barSeq = 40;
+    function genBarcode(prefix) {
+      barSeq += 7;
+      return prefix + String(barSeq).padStart(5, '0');
+    }
+    function placeStock(sku, unitsPerBuy) {
+      // Corporate holds nearly everything; the shops and Davidoff hold a subset,
+      // which is what makes the per-location views worth looking at.
+      var box = unitsPerBuy > 1;
+      if (rnd() < 0.86) genStock.corp[sku] = Math.round(between(box ? 20 : 4, box ? 140 : 40));
+      if (rnd() < 0.42) genStock.shop1[sku] = Math.round(between(box ? 10 : 2, box ? 45 : 14));
+      if (rnd() < 0.38) genStock.shop2[sku] = Math.round(between(box ? 8 : 2, box ? 38 : 12));
+      if (rnd() < 0.40) genStock.davidoff[sku] = Math.round(between(box ? 12 : 2, box ? 50 : 16));
+    }
+
+    var existingNames = {};
+    products.forEach(function (p) { existingNames[p.name] = true; });
+
+    LINES.forEach(function (line) {
+      // Each line carries five or six vitolas, the way a real boutique stocks it.
+      var count = 5 + Math.floor(rnd() * 2);
+      var used = {};
+      for (var i = 0; i < count; i++) {
+        var vi = Math.floor(rnd() * VITOLAS.length);
+        if (used[vi]) { vi = (vi + 3) % VITOLAS.length; }
+        used[vi] = true;
+        var vit = VITOLAS[vi];
+        var name = line.name + ' ' + vit.v;
+        if (existingNames[name]) continue;
+        existingNames[name] = true;
+        var perStick = round2(line.base * vit.m * between(0.96, 1.05));
+        var boxCost = round2(perStick * vit.per);
+        var sku = genBarcode(line.pre);
+        products.push(product(sku, sku, false, name, line.cat, line.sup, 'box', 'stick', vit.per, boxCost));
+        placeStock(sku, vit.per);
+      }
+    });
+
+    ACCESSORIES.forEach(function (a) {
+      if (existingNames[a[0]]) return;
+      existingNames[a[0]] = true;
+      var sku = genBarcode('81206602');
+      products.push(product(sku, sku, false, a[0], a[1], a[2], 'unit', 'unit', 1, a[3]));
+      placeStock(sku, 1);
+    });
+
     var stock = {
       corp: {
         '7623500010012': 150, '7623500010029': 80, '7623500010036': 75, '7623500010043': 100,
@@ -273,10 +394,36 @@
       }
     };
 
+    // Fold the generated catalog into the hand-written stock snapshot.
+    Object.keys(genStock).forEach(function (loc) {
+      Object.keys(genStock[loc]).forEach(function (sku) {
+        stock[loc][sku] = genStock[loc][sku];
+      });
+    });
+
     // ~31 ledger entries over the past 3 weeks, oldest first.
     function seedEntry(days, type, fields) {
       var e = makeEntry(type, fields);
       e.ts = d(days);
+      return e;
+    }
+
+    /* A dashboard whose headline number is 0, under a feed whose newest line is
+       five days old, reads as a system nobody uses. That is the worst possible
+       first second for a product whose whole claim is that the list keeps
+       itself. So the demo always opens on a morning's worth of real work.
+
+       The clamp matters: "movements today" counts entries since local midnight,
+       so an entry placed nine hours back would fall into yesterday for anyone
+       opening the demo before 09:00. */
+    var midnight = new Date(now);
+    midnight.setHours(0, 0, 0, 0);
+    function todayAt(hoursBack) {
+      return Math.max(midnight.getTime() + 60000, now - Math.round(hoursBack * 3600000));
+    }
+    function seedToday(hoursBack, type, fields) {
+      var e = makeEntry(type, fields);
+      e.ts = todayAt(hoursBack);
       return e;
     }
 
@@ -311,7 +458,24 @@
       seedEntry(4, 'count-adjust', { sku: '852113005011', qty: -2, to: 'shop1', author: 'shop-clerk', note: 'count: expected 42, counted 40' }),
       seedEntry(3, 'cost-change', { sku: '7623500010012', author: 'sara', note: '399.5 -> 412.5' }),
       seedEntry(2, 'receive', { sku: '7623500010074', qty: 30, to: 'davidoff', author: 'dhr-lead' }),
-      seedEntry(2, 'receive', { sku: '7623500010074', qty: 60, to: 'corp', author: 'corp-mgr' })
+      seedEntry(2, 'receive', { sku: '7623500010074', qty: 60, to: 'corp', author: 'corp-mgr' }),
+
+      // Today: a delivery received at corporate first thing, distributed out to
+      // the shops through the morning, a price update, and a shelf count.
+      seedToday(8.5, 'receive', { sku: '7623500010043', qty: 75, to: 'corp', author: 'corp-mgr' }),
+      seedToday(8.2, 'receive', { sku: '7623500010050', qty: 50, to: 'corp', author: 'corp-mgr' }),
+      seedToday(8.0, 'receive', { sku: '840412100024', qty: 60, to: 'corp', author: 'corp-mgr' }),
+      seedToday(7.4, 'receive', { sku: '852113005011', qty: 120, to: 'corp', author: 'corp-mgr' }),
+      seedToday(6.6, 'transfer', { sku: '7623500010043', qty: 25, from: 'corp', to: 'shop1', author: 'corp-mgr' }),
+      seedToday(6.4, 'transfer', { sku: '7623500010050', qty: 20, from: 'corp', to: 'shop1', author: 'corp-mgr' }),
+      seedToday(5.9, 'transfer', { sku: '840412100024', qty: 20, from: 'corp', to: 'shop2', author: 'corp-mgr' }),
+      seedToday(5.5, 'cost-change', { sku: '7443642200025', author: 'sara', note: '212 -> 224' }),
+      seedToday(4.8, 'receive', { sku: '7623500010012', qty: 25, to: 'davidoff', author: 'dhr-lead' }),
+      seedToday(4.5, 'receive', { sku: 'DHR-0001', qty: 18, to: 'davidoff', author: 'dhr-lead' }),
+      seedToday(3.7, 'transfer', { sku: '852113005011', qty: 40, from: 'corp', to: 'davidoff', author: 'corp-mgr' }),
+      seedToday(3.1, 'count-adjust', { sku: '840412100017', qty: -3, to: 'shop1', author: 'shop-clerk', note: 'count: expected 45, counted 42' }),
+      seedToday(2.4, 'receive', { sku: '7623500010074', qty: 40, to: 'davidoff', author: 'dhr-lead' }),
+      seedToday(1.8, 'transfer', { sku: '7623500010012', qty: 15, from: 'corp', to: 'shop2', author: 'corp-mgr' })
     ];
 
     return {
@@ -321,7 +485,8 @@
       ledger: ledger,
       offline: false,
       queue: [],
-      internalSeq: 2
+      internalSeq: 2,
+      seededOn: midnight.getTime()
     };
   }
 
@@ -329,12 +494,35 @@
 
   var Store = {};
 
+  /* Seeded data ages. Somebody opens the demo, it looks alive; they open it
+     again next week and the headline metric is back to zero with a feed full of
+     week-old entries, which is exactly the impression the seeding was there to
+     avoid. So on any day after the one it was seeded, slide every timestamp
+     forward by the whole number of days elapsed. Relative ages are preserved,
+     anything the viewer did themselves moves with it, and today stays today. */
+  function reanchor(s) {
+    if (typeof s.seededOn !== 'number') return false;
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var delta = today.getTime() - s.seededOn;
+    if (delta < 86400000) return false;
+    s.ledger.forEach(function (e) { e.ts += delta; });
+    s.products.forEach(function (p) {
+      p.createdTs += delta;
+      (p.costHistory || []).forEach(function (h) { h.ts += delta; });
+    });
+    (s.queue || []).forEach(function (q) { if (typeof q.ts === 'number') q.ts += delta; });
+    s.seededOn = today.getTime();
+    return true;
+  }
+
   Store.init = function () {
     if (state) return;
     var loaded = load();
     if (loaded) {
       state = loaded;
       ledgerCounter = state.ledger.length;
+      if (reanchor(state)) save();
     } else {
       state = seed();
       ledgerCounter = state.ledger.length;
