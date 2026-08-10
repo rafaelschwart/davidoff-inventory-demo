@@ -104,6 +104,32 @@
   }
 
   /* ----------------------------------------------------------
+     Viewport
+     A handful of strings are too long to fit a phone-width field.
+     This is the only place layout width reaches into the markup;
+     everything else responsive is done in styles.css. The breakpoint
+     matches the narrow block there.
+     ---------------------------------------------------------- */
+
+  var NARROW_MQ = '(max-width: 600px)';
+
+  function isNarrow() {
+    try {
+      return !!(window.matchMedia && window.matchMedia(NARROW_MQ).matches);
+    } catch (e) { return false; }
+  }
+
+  function watchViewport() {
+    try {
+      var mq = window.matchMedia && window.matchMedia(NARROW_MQ);
+      if (!mq) return;
+      var onFlip = function () { if (ui.storeReady) render(); };
+      if (mq.addEventListener) mq.addEventListener('change', onFlip);
+      else if (mq.addListener) mq.addListener(onFlip);
+    } catch (e) { /* the long string simply stays */ }
+  }
+
+  /* ----------------------------------------------------------
      Animation helpers (anime.js, vendored; every use is guarded
      and skipped when missing or when reduced motion is set)
      ---------------------------------------------------------- */
@@ -528,6 +554,7 @@
   function boot() {
     applyStoredTheme();
     watchSystemTheme();
+    watchViewport();
     if (!window.Store || typeof Store.init !== 'function') {
       showStorePanel(null);
       return;
@@ -596,6 +623,7 @@
   function render() {
     if (!ui.storeReady) return;
     captureFocus();
+    captureScroll();
     document.body.className = 'route-' + ui.route;
     try {
       renderTopbar();
@@ -616,7 +644,38 @@
       }
     }
     restoreFocus();
+    restoreScroll();
     runFx();
+  }
+
+  /* The catalog table lives in its own scroll box, and every render
+     replaces its markup, which drops the box back to 0,0. On a phone the
+     table is wider than the screen, so that silently threw away the
+     column you had scrolled to: tapping the row action menu, which sits
+     in the last column, looked like nothing happened at all. */
+
+  var catalogScroll = null;
+
+  function catalogSig() {
+    var c = ui.catalog;
+    return [c.q, c.cat, c.sup, c.sort.key, c.sort.dir].join('|');
+  }
+
+  function captureScroll() {
+    var el = document.querySelector('.catalog-wrap');
+    catalogScroll = el ? { left: el.scrollLeft, top: el.scrollTop, sig: catalogSig() } : null;
+  }
+
+  function restoreScroll() {
+    var memo = catalogScroll;
+    catalogScroll = null;
+    if (!memo) return;
+    var el = document.querySelector('.catalog-wrap');
+    if (!el) return;
+    el.scrollLeft = memo.left;
+    // the row position only survives while the same rows are listed;
+    // a new search or sort should start at the top again
+    if (memo.sig === catalogSig()) el.scrollTop = memo.top;
   }
 
   function captureFocus() {
@@ -700,6 +759,21 @@
         (ui.route === r.id ? '<span class="nav-ind"></span>' : '') + esc(r.label) +
         '<span class="nav-u"></span></a>';
     }).join('');
+    syncNavScroll();
+  }
+
+  // Below 820px the nav is a horizontal strip wider than the screen, and
+  // rewriting its markup resets the strip back to the left edge. Recentre
+  // the active destination so it never lands off screen. On the desktop
+  // column the strip does not overflow, so this is a no-op there.
+  function syncNavScroll() {
+    var host = $('#sidebar');
+    var active = document.querySelector('#nav a.active');
+    if (!host || !active) return;
+    if (host.scrollWidth <= host.clientWidth + 1) return;
+    var a = active.getBoundingClientRect();
+    var h = host.getBoundingClientRect();
+    host.scrollLeft += (a.left - h.left) - (h.width - a.width) / 2;
   }
 
   /* ----------------------------------------------------------
@@ -883,7 +957,9 @@
     var scanBlock =
       '<div class="scan-row">' +
       '  <input id="scan-input" type="text" autocomplete="off" spellcheck="false" ' +
-      '    placeholder="Scan a barcode, or type a code and press Enter" data-key="scan">' +
+      '    placeholder="' + (isNarrow()
+        ? 'Scan or type a code, then Enter'
+        : 'Scan a barcode, or type a code and press Enter') + '" data-key="scan">' +
       ('BarcodeDetector' in window && !ui.cameraFailed
         ? '<button class="btn" type="button" data-action="camera-open" title="Scan with this device camera">Camera scan</button>'
         : '') +
@@ -1408,7 +1484,7 @@
     } else {
       var sheet = c.loc ? (Store.countSheet(c.loc) || []) : [];
       body = sheet.length
-        ? '<div class="table-wrap"><table class="grid">' +
+        ? '<div class="table-wrap"><table class="grid counts-grid">' +
           '<thead><tr><th>SKU</th><th>Product</th><th class="num">Expected</th><th class="num">Counted</th></tr></thead><tbody>' +
           sheet.map(function (row) {
             var v = c.values[row.sku] != null ? c.values[row.sku] : row.expected;

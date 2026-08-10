@@ -1329,14 +1329,190 @@ th.sortable:hover { color: var(--dv-gold-dark); }
   .brand-promise { display: none; }
 }
 
-@media (max-width: 760px) {
-  body { grid-template-columns: 74px 1fr; }
-  #nav a { font-size: 8.5px; padding: 9px 6px; letter-spacing: 0.08em; }
+/* ---------- phone and small tablet: single-column shell ----------
+   Below this width a 232px navigation column cannot coexist with a
+   readable main area, so the shell collapses to one column, the
+   sidebar becomes a horizontal strip under the top bar, and the
+   document itself scrolls. The desktop shell locks the page to
+   100vh and scrolls #view instead; that is wrong here because
+   mobile browser chrome resizes the visual viewport, so the height
+   is expressed as a dvh minimum with a vh fallback. */
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+
+  body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas:
+      "top"
+      "side"
+      "main"
+      "foot";
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  /* --- top bar: the wordmark holds its line, controls wrap below --- */
+
+  #topbar {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 10px;
+    padding: 10px 14px;
+  }
+  .brand { gap: 10px; flex: 1 1 auto; }
+  .brand-title, .brand-rule, .brand-promise { display: none; }
+  .brand-logo img { height: 26px; }
+
+  #topbar-controls {
+    flex-wrap: wrap;
+    flex-shrink: 1;
+    width: 100%;
+    gap: 10px 14px;
+  }
+  /* the LIVE / OFFLINE word already names the control */
+  .ctl-label { display: none; }
+  .user-pill { padding: 0 8px 0 12px; min-height: 44px; }
+  .user-pill select { font-size: 16px; }
+  /* the visible track stays 20px tall; only the hit area grows to 44px */
+  .switch input { top: -12px; height: 44px; }
+
+  /* --- navigation: horizontal scrollable strip --- */
+
+  #sidebar {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--dv-gold);
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  #nav { flex-direction: row; flex-wrap: nowrap; gap: 0; padding: 0 6px; }
+  #nav a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 12px 12px;
+    border-left: none;
+    white-space: nowrap;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  /* the active marker turns from a left rail into an underline */
+  .nav-ind { left: 12px; right: 12px; top: auto; bottom: 0; width: auto; height: 2px; }
+  .nav-u { display: none; }
+  #nav .nav-sep { width: 1px; height: auto; margin: 12px 5px; }
   .side-stamp { display: none; }
-  .brand-title { display: none; }
-  .brand-rule { display: none; }
+
+  /* --- main and footer: the document owns the scroll now --- */
+
+  #view {
+    overflow: visible;
+    min-width: 0;
+    padding: 20px 16px 48px;
+  }
+  h2.screen-title { font-size: 19px; letter-spacing: 0.16em; }
+  .screen-head { margin-bottom: 20px; }
+
+  #footer { height: auto; min-height: 42px; padding: 12px 16px; gap: 10px; }
+  .foot-rule { display: none; }
+
+  #toasts { left: 12px; right: 12px; bottom: 12px; max-width: none; }
+
+  /* --- dashboard --- */
+
+  .tile-row { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .tile { padding: 14px 14px 12px; }
+  .tile .kicker { font-size: 9px; letter-spacing: 0.12em; }
+  .tile-num { font-size: 20px; }
+  .tile-num small { font-size: 11px; }
+  .tile-note { font-size: 10.5px; }
   .loc-cards { grid-template-columns: 1fr; }
-  #view { padding: 20px 16px 60px; }
+  .loc-metrics { gap: 22px; }
+
+  /* --- tables: the box scrolls sideways, never the page --- */
+
+  .table-wrap { max-width: 100%; }
+  .catalog-wrap { max-height: 62vh; max-height: 62dvh; }
+
+  /* --- toolbars: one control per line beats a squeezed row --- */
+
+  .toolbar { gap: 10px; }
+  .toolbar .spacer { display: none; }
+  .toolbar select, .toolbar .field, .toolbar .search-wrap { flex: 1 1 100%; }
+  .catalog-toolbar select { max-width: none; width: 100%; }
+  .search-wrap { display: flex; width: 100%; }
+  .toolbar input[type="search"], .search-wrap input[type="search"] { min-width: 0; width: 100%; }
+
+  .bulk-bar, .report-banner, .assigned-callout { flex-wrap: wrap; }
+
+  /* --- receive --- */
+
+  .scan-row { flex-wrap: wrap; }
+  #scan-input { flex: 1 1 100%; }
+  .form-grid { grid-template-columns: 1fr; }
+
+  /* --- transfer: the two route selects stack, so the arrow lies --- */
+
+  .route-arrow { display: none; }
+  .route-row { flex-wrap: wrap; }
+  .route-row .field { flex: 1 1 100%; }
+
+  /* --- touch targets: 44px minimum on anything tappable ---
+     16px is also the smallest font iOS Safari will not zoom into
+     on focus, and a zoom would push the page off screen. */
+
+  select, input[type="text"], input[type="number"], input[type="search"] {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  /* the field text has to stay at 16px so iOS does not zoom on focus,
+     but the placeholder is only a hint and at 16px it runs past the
+     end of the box */
+  input::placeholder { font-size: 13px; }
+  .btn { min-height: 44px; padding: 11px 16px; }
+  .btn.sm { min-height: 44px; padding: 10px 14px; }
+  .btn-step { width: 44px; height: 44px; font-size: 16px; }
+  .row-menu-btn { width: 44px; height: 44px; }
+  .row-menu-sheet button { padding: 12px 12px; }
+  .row-check { width: 20px; height: 20px; }
+  .sel-td { width: 44px; }
+  .drawer .close-x { width: 44px; height: 44px; }
+  .sim-btn { min-height: 44px; padding: 9px 12px; }
+  .low-item { padding: 12px 2px; }
+  .picker-item { padding: 13px 12px; }
+  .count-input { width: 92px; }
+  .inline-form input { width: 130px; }
+}
+
+/* ---------- phone: trim the master list to what a thumb can read ----------
+   The monogram is decorative and the category is repeated in the row
+   drawer, so both give way and the catalog needs far less sideways
+   scrolling. Column indexes are hidden in matching pairs so the head
+   and the body stay aligned; sorting and the row click are untouched. */
+
+@media (max-width: 600px) {
+  .catalog-grid th:nth-child(2), .catalog-grid td:nth-child(2),
+  .catalog-grid th:nth-child(4), .catalog-grid td:nth-child(4) { display: none; }
+  .catalog-wrap table.grid { min-width: 720px; }
+  /* auto table layout otherwise starves the product name into four
+     lines while the numeric columns keep space they do not need */
+  .catalog-grid .prod-td { min-width: 200px; }
+  .catalog-grid .sku-td { max-width: 130px; }
+
+  /* the count sheet is the one table you have to type into, so the SKU
+     column goes and the whole sheet fits without any sideways scroll */
+  .counts-grid th:nth-child(1), .counts-grid td:nth-child(1) { display: none; }
+  table.grid.counts-grid { min-width: 0; }
+  .counts-grid .count-input { width: 100%; max-width: 110px; }
+
+  table.grid th { padding: 11px 12px; }
+  table.grid td { padding: 11px 12px; }
 }
 
 /* ---------- print: label sheet only ---------- */
