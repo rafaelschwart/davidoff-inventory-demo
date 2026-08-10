@@ -325,11 +325,27 @@
       barSeq += 7;
       return prefix + String(barSeq).padStart(5, '0');
     }
+    /* How many generated products are allowed to read as running low. The panel
+       is a call to action, so a handful of names is a system doing its job;
+       thirty names is a business that looks badly run, and the demo has to
+       flatter the operation, not indict it. */
+    var LOW_TARGET = 2;
+    var lowPlaced = 0;
+    var placedCount = 0;
+
     function placeStock(sku, unitsPerBuy) {
-      // Corporate holds nearly everything; the shops and Davidoff hold a subset,
-      // which is what makes the per-location views worth looking at.
+      // Corporate is the distribution hub, so it carries every SKU: a product
+      // sitting at zero in all four locations would show an OUT chip on a demo
+      // whose whole point is that the list is trustworthy.
       var box = unitsPerBuy > 1;
-      if (rnd() < 0.86) genStock.corp[sku] = Math.round(between(box ? 20 : 4, box ? 140 : 40));
+      placedCount++;
+      var runLow = lowPlaced < LOW_TARGET && placedCount % 29 === 7;
+      if (runLow) {
+        lowPlaced++;
+        genStock.corp[sku] = Math.round(between(3, 11));
+        return; // stays under the low-stock threshold across all locations
+      }
+      genStock.corp[sku] = Math.round(between(box ? 26 : 12, box ? 140 : 45));
       if (rnd() < 0.42) genStock.shop1[sku] = Math.round(between(box ? 10 : 2, box ? 45 : 14));
       if (rnd() < 0.38) genStock.shop2[sku] = Math.round(between(box ? 8 : 2, box ? 38 : 12));
       if (rnd() < 0.40) genStock.davidoff[sku] = Math.round(between(box ? 12 : 2, box ? 50 : 16));
@@ -418,8 +434,17 @@
        opening the demo before 09:00. */
     var midnight = new Date(now);
     midnight.setHours(0, 0, 0, 0);
+    var OLDEST_TODAY_H = 8.5;
     function todayAt(hoursBack) {
-      return Math.max(midnight.getTime() + 60000, now - Math.round(hoursBack * 3600000));
+      /* The shop trades until 2 AM, so somebody really does open this at 00:30,
+         and an entry placed eight hours back would land in yesterday and stop
+         counting. Clamping them all to just-after-midnight fixes the count but
+         stamps fourteen movements on the same minute, which reads as broken.
+         Compressing the same sequence into however much of the day exists keeps
+         both the count and the shape: a busy half hour instead of a busy day. */
+      var elapsed = now - midnight.getTime();
+      var scale = Math.min(1, Math.max(0, elapsed - 45000) / (OLDEST_TODAY_H * 3600000));
+      return Math.max(midnight.getTime() + 30000, now - Math.round(hoursBack * 3600000 * scale));
     }
     function seedToday(hoursBack, type, fields) {
       var e = makeEntry(type, fields);
